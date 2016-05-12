@@ -25,8 +25,8 @@
       <title><?php echo $block->escapeHtml($_post->getTitle(), null, true) ?></title>
       <link><?php echo $_post->getPostUrl() ?></link>
       <description><![CDATA[<?php echo substr($block->stripTags($_post->getContent()), 0, 255) ?>]]></description>
-      <?php if ($featuredImage = $_post->getFeaturedImage()) { ?>
-         <image><?php echo $featuredImage ?></image>
+      <?php if ($thumbnail = $_post->getThumbnailUrl()) { ?>
+         <image><?php echo $thumbnail ?></image>
       <?php } ?>
    </item>
    <?php } ?>
