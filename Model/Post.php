@@ -197,6 +197,20 @@ class Post extends \Magento\Framework\Model\AbstractModel
         return $this->getData('featured_image');
     }
 
+    public function getThumbnailUrl()
+    {
+        if (!$this->hasData('thumbnail_url')) {
+            if ($file = $this->getData('thumbnail')) {
+                $image = $this->_url->getMediaUrl($file);
+            } else {
+                $image = false;
+            }
+            $this->setData('thumbnail_url', $image);
+        }
+
+        return $this->getData('thumbnail_url');
+    }
+
     /**
      * Retrieve post parent categories
      * @return \Magefan\Blog\Model\ResourceModel\Category\Collection

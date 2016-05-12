@@ -52,7 +52,20 @@ class Save extends \Magefan\Blog\Controller\Adminhtml\Post
         }
 
         /* prepare featured image */
-        $imageField = 'featured_img';
+        $this->prepareImage($model, $data, 'featured_img');
+
+        /* prepare thumbnail */
+        $this->prepareImage($model, $data, 'thumbnail');
+    }
+
+    /**
+     * @param $model
+     * @param $data
+     * @param $imageField
+     * @throws FrameworkException
+     */
+    protected function prepareImage($model, $data, $imageField)
+    {
         $fileSystem = $this->_objectManager->create('Magento\Framework\Filesystem');
         $mediaDirectory = $fileSystem->getDirectoryRead(\Magento\Framework\App\Filesystem\DirectoryList::MEDIA);
 
@@ -66,7 +79,7 @@ class Save extends \Magefan\Blog\Controller\Adminhtml\Post
         }
         try {
             $uploader = $this->_objectManager->create('Magento\MediaStorage\Model\File\UploaderFactory');
-            $uploader = $uploader->create(['fileId' => 'post['.$imageField.']']);
+            $uploader = $uploader->create(['fileId' => 'post[' . $imageField . ']']);
             $uploader->setAllowedExtensions(['jpg', 'jpeg', 'gif', 'png']);
             $uploader->setAllowRenameFiles(true);
             $uploader->setFilesDispersion(true);

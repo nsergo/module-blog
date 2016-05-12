@@ -138,7 +138,7 @@ class Main extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'hidden',
                 ['name' => 'post[store_ids][]', 'value' => $this->_storeManager->getStore(true)->getId()]
             );
-            $model->setStoreIds([$this->_storeManager->getStore(true)->getId()]);
+            $model->setStoreIds($this->_storeManager->getStore(true)->getId());
         }
 
         $field = $fieldset->addField(
@@ -164,6 +164,20 @@ class Main extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'title' => __('Featured Image'),
                 'label' => __('Featured Image'),
                 'name' => 'post[featured_img]',
+                'note' => __('Allow image type: jpg, jpeg, gif, png'),
+            ]
+        );
+
+        if (is_array($model->getData('thumbnail'))) {
+            $model->setData('thumbnail', $model->getData('thumbnail')['value']);
+        }
+        $fieldset->addField(
+            'thumbnail',
+            'image',
+            [
+                'title' => __('Thumbnail'),
+                'label' => __('Thumbnail'),
+                'name' => 'post[thumbnail]',
                 'note' => __('Allow image type: jpg, jpeg, gif, png'),
             ]
         );

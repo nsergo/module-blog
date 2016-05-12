@@ -8,9 +8,9 @@
 
 namespace Magefan\Blog\Setup;
 
-use Magento\Framework\Setup\UpgradeSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
+use Magento\Framework\Setup\UpgradeSchemaInterface;
 
 /**
  * Blog update
@@ -24,6 +24,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
     public function upgrade(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
         $setup->startSetup();
+        $connection = $setup->getConnection();
 
         if (version_compare($context->getVersion(), '2.0.1') < 0) {
 
@@ -32,7 +33,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 $tableName = $setup->getTable($tableName);
 
                 // Check if the table already exists
-                if ($setup->getConnection()->isTableExists($tableName) == true) {
+                if ($connection->isTableExists($tableName) == true) {
 
                     $columns = [
                         'position' => [
@@ -42,7 +43,6 @@ class UpgradeSchema implements UpgradeSchemaInterface
                         ],
                     ];
 
-                    $connection = $setup->getConnection();
                     foreach ($columns as $name => $definition) {
                         $connection->addColumn($tableName, $name, $definition);
                     }
@@ -56,6 +56,32 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 'nullable' => true,
                 'comment' => 'Thumbnail Image',
             ]);
+        }
+
+        if (version_compare($context->getVersion(), '2.2.0', '<')) {
+
+            $connection->changeColumn(
+                $setup->getTable('magefan_blog_post'),
+                'featured_img',
+                'featured_img',
+                [
+                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                    'length' => 255,
+                    'nullable' => true,
+                    'comment' => 'Featured Image',
+                ]
+            );
+
+            $connection->addColumn(
+                $setup->getTable('magefan_blog_post'),
+                'thumbnail',
+                [
+                    'type'     => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                    'length'   => 255,
+                    'nullable' => true,
+                    'comment'  => 'Thumbnail Image',
+                ]
+            );
         }
 
         $setup->endSetup();
